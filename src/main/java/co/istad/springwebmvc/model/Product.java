@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class Product {
-
     private Integer id;
     private String uuid;
     private String name;

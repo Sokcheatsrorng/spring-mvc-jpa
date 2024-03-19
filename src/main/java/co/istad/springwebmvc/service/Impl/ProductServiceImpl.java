@@ -1,16 +1,16 @@
 package co.istad.springwebmvc.service.Impl;
 
-import co.istad.springwebmvc.dto.ProductDto;
+import co.istad.springwebmvc.dto.ProductCreateRequest;
+import co.istad.springwebmvc.dto.ProductEditRequest;
+import co.istad.springwebmvc.dto.ProductResponse;
 import co.istad.springwebmvc.model.Product;
 import co.istad.springwebmvc.service.ProductService;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -38,12 +38,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findProducts(String name,Boolean isStatus) {
+    public List<ProductResponse> findProducts(String name, Boolean isStatus) {
         return productList
                 .stream()
                 .filter(pro->pro.getIsStatus().equals(isStatus) && pro.getName().toLowerCase().contains(name.toLowerCase()))
                 .map(product ->
-                    new ProductDto(
+                    new ProductResponse(
                             product.getUuid(),
                             product.getName(),
                             product.getPrice(),
@@ -55,11 +55,45 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findProductById(Integer id) {
+    public void createNewProduct(ProductCreateRequest request) {
+        Product newProduct = new Product();
+        newProduct.setId(productList.size()+1);
+        newProduct.setName(request.name());
+        newProduct.setPrice(request.price());
+        newProduct.setQty(request.qty());
+        newProduct.setUuid(UUID.randomUUID().toString());
+        newProduct.setImportedDate(LocalDate.now());
+        newProduct.setIsStatus(true);
+        productList.add(newProduct);
+
+    }
+
+    @Override
+    public void editProductByUUID(ProductEditRequest request, String uuid) {
+        //Check UUID if it eixisted
+        Long count = productList.stream()
+                .filter(pro->pro.getUuid().equals(uuid))
+                .peek(pro ->{
+                    pro.setName(request.name());
+                    pro.setPrice(request.price());
+                }).count();
+        System.out.println("After Edit: "+ count);
+
+    }
+
+    @Override
+    public Boolean deleteProductByUUID(String uuid) {
+        return productList
+                .removeIf(product -> product.getUuid().equals(uuid));
+
+    }
+
+    @Override
+    public ProductResponse findProductById(Integer id) {
         return productList
                 .stream()
                 .filter(product-> product.getId().equals(id) && product.getIsStatus().equals(true))
-                .map(product -> new ProductDto(
+                .map(product -> new ProductResponse(
                         product.getUuid(),
                         product.getName(),
                         product.getPrice(),
@@ -68,11 +102,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findProductByUUid(String uuid) {
+    public ProductResponse findProductByUUid(String uuid) {
         return productList
                 .stream()
                 .filter(product-> product.getUuid().equals(uuid) && product.getIsStatus().equals(true))
-                .map(product -> new ProductDto(
+                .map(product -> new ProductResponse(
                         product.getUuid(),
                         product.getName(),
                         product.getPrice(),
