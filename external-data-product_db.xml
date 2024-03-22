@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <object-set>
+    <table path="postgres.public.products">
+      <table from="" to=""/>
+      <table from="" to=""/>
+    </table>
+  </object-set>
+</data>

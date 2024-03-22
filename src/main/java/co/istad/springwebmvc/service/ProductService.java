@@ -12,6 +12,7 @@ public interface ProductService {
     void createNewProduct(ProductCreateRequest request);
     void editProductByUUID(ProductEditRequest request, String uuid);
     Boolean deleteProductByUUID(String uuid);
+    void deleteProductByUUIDWithoutReturn(String uuid);
    ProductResponse findProductById(Integer id);
    ProductResponse findProductByUUid(String uuid);
 }
