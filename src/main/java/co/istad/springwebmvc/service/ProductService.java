@@ -8,11 +8,11 @@ import co.istad.springwebmvc.model.Product;
 import java.util.List;
 
 public interface ProductService {
-    List<ProductResponse> findProducts(String name, Boolean isStatus);
+    List<ProductResponse> findProducts();
     void createNewProduct(ProductCreateRequest request);
-    void editProductByUUID(ProductEditRequest request, String uuid);
-    Boolean deleteProductByUUID(String uuid);
-    void deleteProductByUUIDWithoutReturn(String uuid);
+    void editProductById(ProductEditRequest request, Integer id);
+
+   void deleteProductById(Integer id);
    ProductResponse findProductById(Integer id);
    ProductResponse findProductByUUid(String uuid);
 }

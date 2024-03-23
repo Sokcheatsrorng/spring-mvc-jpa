@@ -1,26 +1,22 @@
 package co.istad.springwebmvc.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+@Entity
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table
-public class Product {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String uuid;
-    private String name;
-    private Double price;
-    private Integer qty;
-    private LocalDate importedDate;
-    private Boolean isStatus;
 
+    @Column(length = 40, nullable = false,unique = true)
+    private String name;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 }

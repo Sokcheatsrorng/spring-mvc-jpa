@@ -3,6 +3,11 @@ package co.istad.springwebmvc.controller;
 import co.istad.springwebmvc.dto.ProductCreateRequest;
 import co.istad.springwebmvc.dto.ProductEditRequest;
 import co.istad.springwebmvc.service.Impl.ProductServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.attribute.standard.PresentationDirection;
+import java.awt.print.Book;
 import java.util.Map;
 
 @RestController
@@ -21,17 +27,17 @@ import java.util.Map;
 public class ProductController {
    public final ProductServiceImpl productService;
 
-   @PutMapping("/{uuid}")
+   @PutMapping("/{id}")
    void editExistingProduct(@RequestBody ProductEditRequest request,
-                            @PathVariable String uuid){
-       productService.editProductByUUID(request,uuid);
+                            @PathVariable Integer id){
+       productService.editProductById(request,id);
 
 
    }
    @ResponseStatus(HttpStatus.NO_CONTENT)
-   @DeleteMapping("/{uuid}")
-   Boolean deleteProduct(@PathVariable String uuid){
-       return productService.deleteProductByUUID(uuid);
+   @DeleteMapping("/{id}")
+   void  deleteProductByUuid(@PathVariable Integer id){
+        productService.deleteProductById(id);
    }
    @ResponseStatus(HttpStatus.CREATED)
    @PostMapping
@@ -40,13 +46,21 @@ public class ProductController {
        productService.createNewProduct(request);
    }
 
+    @Operation(summary = "Find all Products")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the products",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Book.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid id product",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = @Content) })
 
     @GetMapping
-    ResponseEntity<Map<String,Object>> findProduct(@RequestParam(required = false,defaultValue ="") String name,
-                               @RequestParam(required = false,defaultValue ="true") Boolean isStatus){
+    ResponseEntity<Map<String,Object>> findProduct(){
         Map<String,Object> data = Map.of(
                 "Message","Products have been found!",
-                "data",productService.findProducts(name,isStatus)
+                "data",productService.findProducts()
 
         );
 
