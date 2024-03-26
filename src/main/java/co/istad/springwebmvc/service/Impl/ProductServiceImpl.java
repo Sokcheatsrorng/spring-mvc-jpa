@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -86,16 +87,13 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public ProductResponse findProductByUUid(String uuid) {
-        Product existingProduct = productRepository.findByUuid(uuid)
-                .orElseThrow(()->new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Product with ID " + uuid + " not found"
-                ));
+        Optional<Product> existingProduct = productRepository.findByUuid(uuid);
         return new ProductResponse(
-                existingProduct.getUuid(),
-                existingProduct.getName(),
-                existingProduct.getPrice(),
-                existingProduct.getQty());
+                existingProduct.get().getUuid(),
+                existingProduct.get().getName(),
+                existingProduct.get().getPrice(),
+                existingProduct.get().getQty()
+        );
     }
 
 }
