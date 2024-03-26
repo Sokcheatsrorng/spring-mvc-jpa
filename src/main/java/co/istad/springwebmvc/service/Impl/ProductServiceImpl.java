@@ -13,11 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j  // using for view Log form Lombok
@@ -86,13 +83,19 @@ public class ProductServiceImpl implements ProductService {
                 existingProduct.getName(),
                 existingProduct.getPrice(),
                 existingProduct.getQty());
-
     }
-
     @Override
     public ProductResponse findProductByUUid(String uuid) {
-      return null;
+        Product existingProduct = productRepository.findByUuid(uuid)
+                .orElseThrow(()->new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Product with ID " + uuid + " not found"
+                ));
+        return new ProductResponse(
+                existingProduct.getUuid(),
+                existingProduct.getName(),
+                existingProduct.getPrice(),
+                existingProduct.getQty());
     }
-
 
 }

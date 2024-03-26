@@ -2,6 +2,7 @@ package co.istad.springwebmvc.controller;
 
 import co.istad.springwebmvc.dto.ProductCreateRequest;
 import co.istad.springwebmvc.dto.ProductEditRequest;
+import co.istad.springwebmvc.dto.ProductResponse;
 import co.istad.springwebmvc.service.Impl.ProductServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -86,6 +87,4 @@ public class ProductController {
                 "data",productService.findProductByUUid(uuid)
         );
     }
-
-
 }
